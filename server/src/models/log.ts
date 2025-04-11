@@ -23,7 +23,7 @@ export interface LogAttributes {
 
   socialFrequency: 'none' | 'low' | 'moderate' | 'high';
 
-  symptoms: string[];
+  symptoms: string;
 
   logDate?: Date;
 }
@@ -45,7 +45,7 @@ export class Log extends Model<LogAttributes, LogCreationAttributes> implements 
 
   public socialFrequency!: 'none' | 'low' | 'moderate' | 'high';
 
-  public symptoms!: string[];
+  public symptoms!: string;
 
   public logDate?: Date;
 
@@ -85,7 +85,7 @@ export default (sequelize: Sequelize) => {
         allowNull: false,
       },
 
-      symptoms: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: false },
+      symptoms: { type: DataTypes.STRING, allowNull: false },
 
       logDate: {
         type: DataTypes.DATEONLY,

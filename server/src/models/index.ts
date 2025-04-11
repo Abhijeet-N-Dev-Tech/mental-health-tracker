@@ -2,17 +2,7 @@ import { Sequelize } from 'sequelize';
 import createUserModel, { User } from './user';
 import createLogModel, { Log } from './log';
 import createActivityModel, { Activity } from './activity';
-
-const sequelize = new Sequelize(
-  process.env.DB_NAME!,
-  process.env.DB_USER!,
-  process.env.DB_PASS!,
-  {
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-    logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  }
-);
+import sequelize from '../config/db';
 
 const userModel = createUserModel(sequelize);
 const logModel = createLogModel(sequelize);

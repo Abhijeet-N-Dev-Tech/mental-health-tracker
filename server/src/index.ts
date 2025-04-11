@@ -4,7 +4,7 @@ dotenv.config();
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
-import routes from './routes';
+import routes from './routes/logRoutes'
 import './auth';
 import { sequelize } from './models';
 import cors from 'cors';

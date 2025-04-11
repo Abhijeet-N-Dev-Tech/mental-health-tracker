@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import LogList from './components/LogList';
-import LogFormModal from './components/LogFormModal';
-import Overview from './components/Overview';
-import { User } from './types';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import LogList from "./components/LogList";
+import LogFormModal from "./components/LogFormModal";
+import Overview from "./components/Overview";
+import { User } from "./types";
 
 axios.defaults.withCredentials = true;
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
@@ -11,7 +11,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'logs'>('overview');
+  const [activeTab, setActiveTab] = useState<"overview" | "logs">("overview");
   const [refetchSignal, setRefetchSignal] = useState(false);
 
   const fetchUser = async () => {
@@ -45,40 +45,47 @@ export default function App() {
           </button>
         )}
 
-        <h1 className="text-4xl font-extrabold text-center text-blue-800 mb-6">
-          Mental Health Progress Tracker
-        </h1>
-
         {!user ? (
-          <div className="text-center mt-10">
-            <a
-              href={`${API_BASE}/auth/google`}
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
-            >
-              <i className="fab fa-google text-xl"></i>
-              &nbsp;Sign in with Google
-            </a>
-          </div>
+         <div className="flex items-center justify-center min-h-[60vh]">
+         <div className="text-center">
+           <h1 className="text-4xl font-extrabold text-blue-800 mb-6">
+             Mental Health Progress Tracker
+           </h1>
+     
+           <a
+             href={`${API_BASE}/auth/google`}
+             className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition"
+           >
+             <i className="fab fa-google text-xl"></i>
+             &nbsp;Sign in with Google
+           </a>
+         </div>
+       </div>
         ) : (
           <>
-            <h2 className="text-xl text-gray-700 mb-4">
-              Welcome, {user.name}
-            </h2>
+           <h1 className="text-4xl font-extrabold text-center text-blue-800 mb-6">
+              Mental Health Progress Tracker
+            </h1>
+            <h2 className="text-xl text-gray-700 mb-4">Welcome, {user.name}</h2>
 
             <div className="flex justify-between items-center mb-6">
               <div className="flex space-x-4">
                 <button
-                  onClick={() => setActiveTab('overview')}
+                  onClick={() => setActiveTab("overview")}
                   className={`px-4 py-2 rounded ${
-                    activeTab === 'overview' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+                    activeTab === "overview"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200"
                   }`}
                 >
                   Overview
                 </button>
                 <button
-                  onClick={() => setActiveTab('logs')}
+                  onClick={() => setActiveTab("logs")}
                   className={`px-4 py-2 rounded ${
-                    activeTab === 'logs' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+                    activeTab === "logs"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200"
                   }`}
                 >
                   Daily Logs
@@ -93,10 +100,10 @@ export default function App() {
               </button>
             </div>
 
-            {activeTab === 'overview' && <Overview refetchSignal={refetchSignal} />}
-            {activeTab === 'logs' && (
-              <LogList refetchSignal={refetchSignal} />
+            {activeTab === "overview" && (
+              <Overview refetchSignal={refetchSignal} />
             )}
+            {activeTab === "logs" && <LogList refetchSignal={refetchSignal} />}
 
             <LogFormModal
               show={showModal}

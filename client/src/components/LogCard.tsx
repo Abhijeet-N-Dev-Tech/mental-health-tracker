@@ -22,7 +22,7 @@ export default function LogCard({ log }: Props) {
         <p><span className="font-medium">Stress:</span> {log.stress} / 5</p>
         <p><span className="font-medium">Sleep:</span> {log.sleepHours} hrs ({log.sleepQuality})</p>
         <p><span className="font-medium">Social:</span> {log.socialFrequency}</p>
-        <p><span className="font-medium">Symptoms:</span> {log.symptoms.join(', ') || 'None'}</p>
+        <p><span className="font-medium">Symptoms:</span> {JSON.parse(log?.symptoms).join(', ') || 'None'}</p>
       </div>
 
       <div className="mt-3">

@@ -1,54 +1,48 @@
 # React + TypeScript + Vite
+🌟 Mental Health Tracker - Frontend
+This is the frontend for the Mental Health Tracker application, built using React.js. It allows users to log their mental health data and visualize trends.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🎯 Features
+✅ Google OAuth Login
+✅ Submit logs with form validation
+✅ Real-time updates using WebSocket
+✅ Interactive charts for health trends
+✅ Toast notifications for better UX
+🚀 Installation & Setup
+** Clone the Repository**
+git clone https://github.com/your-repo-url.git cd frontend
 
-Currently, two official plugins are available:
+Install Dependencies
+npm install
+node version -22
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Set Up Environment Variables
+Create a .env file in the frontend root directory:
 
-## Expanding the ESLint configuration
+REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id REACT_APP_API_URL=http://localhost:4000
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Run the Application
+npm start The frontend runs on http://localhost:3000.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+📡 API Calls & WebSocket
+🔑 Authentication
+Users log in via Google OAuth. A JWT token is stored in localStorage for authentication.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+📌 Logging
+Action Description Submit Log Users can submit logs via a form. Real-Time Updates Logs update automatically via WebSockets.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+📈 Charts
+Uses Recharts for data visualization. Fetches logs from API and updates in real-time.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+🎨 UI Components
+Component Description Login.js Handles Google OAuth login. Form.js User form for submitting logs. Chart.js Visualizes logs with line charts.
+
+🔌 WebSocket Integration
+The frontend listens for WebSocket events from the backend:
+
+import { socket } from "../utils/api";
+
+socket.on("updateLogs", (newLogs) => { console.log("New logs received:", newLogs); });
+
+🛠 Built With
+React.js - Frontend framework Recharts - Data visualization Socket.io-client - WebSocket communication React Toastify - Toast notifications Axios - API calls

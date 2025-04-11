@@ -1,25 +1,18 @@
-import { Router } from 'express';
-import passport from 'passport';
-import { Log, Activity } from './models';
+import { Request, Response } from 'express';
+import { Log, Activity } from '../models';
 import { Op } from 'sequelize';
 
-const router = Router();
-
-const isAuth = (req: any, res: any, next: any) => {
+// Authenticated route check
+export const isAuth = (req: any, res: any, next: any) => {
   if (req.isAuthenticated()) return next();
   return res.status(401).json({ message: 'Unauthorized' });
 };
 
-router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+export const getMe = (req: any, res: Response) => {
+  res.json(req.user || null);
+};
 
-router.get('/auth/google/callback',
-  passport.authenticate('google', {
-    successRedirect: process.env.CLIENT_APP_URL,
-    failureRedirect: '/login'
-  })
-);
-
-router.post('/auth/logout', (req, res) => {
+export const logout = (req: any, res: Response) => {
   req.logout((err: any) => {
     if (err) return res.status(500).json({ message: 'Logout failed' });
     req.session.destroy(() => {
@@ -27,13 +20,9 @@ router.post('/auth/logout', (req, res) => {
       res.json({ message: 'Logged out successfully' });
     });
   });
-});
+};
 
-router.get('/me', (req: any, res) => {
-  res.json(req.user || null);
-});
-
-router.post('/logs', isAuth, async (req: any, res) => {
+export const createLog = async (req: any, res: Response) => {
   const {
     logDate,
     message,
@@ -44,12 +33,12 @@ router.post('/logs', isAuth, async (req: any, res) => {
     sleepQuality,
     socialFrequency,
     symptoms,
-    activities // Array of { type, duration }
+    activities
   } = req.body;
 
   if (!logDate || !Array.isArray(activities)) {
     res.status(400).json({ message: 'logDate and activities[] are required' });
-    return
+    return;
   }
 
   try {
@@ -67,7 +56,7 @@ router.post('/logs', isAuth, async (req: any, res) => {
         sleepHours,
         sleepQuality,
         socialFrequency,
-        symptoms,
+        symptoms: JSON.stringify(symptoms),
       },
     });
 
@@ -80,10 +69,10 @@ router.post('/logs', isAuth, async (req: any, res) => {
         sleepHours,
         sleepQuality,
         socialFrequency,
-        symptoms,
+        symptoms: JSON.stringify(symptoms),
       });
 
-      await Activity.destroy({ where: { logId: log.id } }); // clear old activities
+      await Activity.destroy({ where: { logId: log.id } });
     }
 
     await Activity.bulkCreate(
@@ -103,9 +92,9 @@ router.post('/logs', isAuth, async (req: any, res) => {
     console.error(err);
     res.status(500).json({ message: 'Failed to save log' });
   }
-});
+};
 
-router.get('/logs', isAuth, async (req: any, res) => {
+export const getLogs = async (req: any, res: Response) => {
   const limit = +req.query.limit || 10;
   const offset = +req.query.offset || 0;
 
@@ -123,9 +112,9 @@ router.get('/logs', isAuth, async (req: any, res) => {
   });
 
   res.json(logs);
-});
+};
 
-router.get('/logs/chart-data', isAuth, async (req: any, res) => {
+export const getChartData = async (req: any, res: Response) => {
   const view = req.query.view === 'monthly' ? 'monthly' : 'weekly';
   const now = new Date();
   const from = new Date(view === 'weekly' ? now.setDate(now.getDate() - 7) : now.setMonth(now.getMonth() - 1));
@@ -171,7 +160,4 @@ router.get('/logs/chart-data', isAuth, async (req: any, res) => {
   }
 
   res.json(chartData);
-});
-
-
-export default router;
+};

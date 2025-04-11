@@ -25,7 +25,7 @@ export interface Log {
   sleepHours: number;
   sleepQuality: 'poor' | 'average' | 'good';
   socialFrequency: 'none' | 'low' | 'moderate' | 'high';
-  symptoms: string[];
+  symptoms: string;
   userId: number;
   logDate: string;
   createdAt: string;
