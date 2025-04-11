@@ -37,6 +37,10 @@ app.use(cors({
   credentials: true,
 }));
 
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // or true — allows HTTPS detection behind proxy
+}
+
 app.use(express.json());
 
 app.use(session({
