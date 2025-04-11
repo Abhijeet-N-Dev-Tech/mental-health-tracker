@@ -9,6 +9,8 @@ import './auth';
 import { sequelize } from './models';
 import cors from 'cors';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const app = express();
 
 app.use(cors({
@@ -37,8 +39,8 @@ app.use(cors({
   credentials: true,
 }));
 
-if (process.env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1); // or true — allows HTTPS detection behind proxy
+if (isProduction) {
+  app.set('trust proxy', 1);
 }
 
 app.use(express.json());
@@ -46,7 +48,11 @@ app.use(express.json());
 app.use(session({
   secret: process.env.SESSION_SECRET!,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-site, 'lax' for local dev
+  }
 }));
 
 app.use(passport.initialize());
