@@ -24,7 +24,8 @@ export default (sequelize: Sequelize) => {
     email: { type: DataTypes.STRING, allowNull: false }
   }, {
     sequelize,
-    modelName: 'User'
+    modelName: 'User',
+    tableName: 'users'
   });
 
   return User;

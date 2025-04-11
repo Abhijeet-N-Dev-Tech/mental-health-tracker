@@ -96,6 +96,7 @@ export default (sequelize: Sequelize) => {
     {
       sequelize,
       modelName: 'Log',
+      tableName: 'logs',
       timestamps: true,
       createdAt: true,
       updatedAt: false,

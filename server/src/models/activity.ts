@@ -32,6 +32,7 @@ export default (sequelize: Sequelize) => {
   }, {
     sequelize,
     modelName: 'Activity',
+    tableName: 'activitites',
     timestamps: false,
   });
 
