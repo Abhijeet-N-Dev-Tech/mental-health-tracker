@@ -3,6 +3,7 @@ dotenv.config();
 
 import express from 'express';
 import session from 'express-session';
+import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import routes from './routes';
 import './auth';
@@ -43,6 +44,7 @@ if (isProduction) {
   app.set('trust proxy', 1);
 }
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.use(session({

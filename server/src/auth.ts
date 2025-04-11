@@ -1,5 +1,6 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import jwt from 'jsonwebtoken';
 import { User } from './models';
 
 passport.serializeUser((user: any, done) => done(null, user.id));
@@ -23,3 +24,11 @@ passport.use(new GoogleStrategy({
   });
   return done(null, user);
 }));
+
+export function generateToken(user: any) {
+  return jwt.sign(
+    { id: user.id, name: user.name, email: user.email },
+    process.env.JWT_SECRET!,
+    { expiresIn: '7d' }
+  );
+}

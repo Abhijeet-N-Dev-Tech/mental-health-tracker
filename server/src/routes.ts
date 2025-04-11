@@ -1,36 +1,51 @@
 import { Router } from 'express';
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
+import { generateToken } from './auth';
+import { User } from './models';
 import { Log, Activity } from './models';
 import { Op } from 'sequelize';
 
 const router = Router();
 
-const isAuth = (req: any, res: any, next: any) => {
-  if (req.isAuthenticated()) return next();
-  return res.status(401).json({ message: 'Unauthorized' });
-};
+async function isAuth(req: any, res: any, next: any) {
+  const token = req.cookies?.token;
+  if (!token) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return
+  }
+
+  try {
+    const userJWT = jwt.verify(token, process.env.JWT_SECRET!);
+    req.user = await User.findByPk(userJWT.id);
+    next();
+  } catch {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+}
 
 router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/auth/google/callback',
-  passport.authenticate('google', {
-    successRedirect: process.env.CLIENT_APP_URL,
-    failureRedirect: '/login'
-  })
+  passport.authenticate('google', { session: false, failureRedirect: '/login' }),
+  (req: any, res) => {
+    const token = generateToken(req.user);
+    res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'lax',
+    });
+    res.redirect(process.env.CLIENT_APP_URL!);
+  }
 );
 
 router.post('/auth/logout', (req, res) => {
-  req.logout((err: any) => {
-    if (err) return res.status(500).json({ message: 'Logout failed' });
-    req.session.destroy(() => {
-      res.clearCookie('connect.sid');
-      res.json({ message: 'Logged out successfully' });
-    });
-  });
+  res.clearCookie('token');
+  res.json({ message: 'Logged out' });
 });
 
-router.get('/me', (req: any, res) => {
-  res.json(req.user || null);
+router.get('/me', isAuth, async (req: any, res) => {
+  const user = await User.findByPk(req.user.id);
+  res.json(user);
 });
 
 router.post('/logs', isAuth, async (req: any, res) => {
